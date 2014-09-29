@@ -10,31 +10,38 @@ module Bowlr
     end
 
     def hit(num)
-      @turn.push(num.strip)
-      if turn_valid?
-        @turn.map!(&:to_i)
-        group_frames
+      if can_take_turn?
+        turn.push(num.strip)
+        if turn_valid?
+          turn.map!(&:to_i)
+          group_frames
+        else
+          turn.pop
+          nil
+        end
       else
-        @turn.pop
-        nil
+        print "\nGame Over, Type Exit and run again\n"
       end
     end
 
+    def can_take_turn?
+      true if frames.length <= 10
+    end
+
     def turn_valid?
-      TurnValidator.validate(@turn)
+      TurnValidator.validate(turn)
     end
 
     def group_frames
-      if @turn == [10] || @turn.length == 2
-        @frames << turn
+      if turn == [10] || turn.length == 2
+        frames << turn
         @turn = []
       end
     end
 
-
     def print_current_frames
-      if @turn == []
-        @frames.each do |frame|
+      if turn == []
+        frames.each do |frame|
           print "#{frame.join(' ')} | "
         end
         print_current_score
@@ -44,10 +51,13 @@ module Bowlr
     # generate array of frame scores
     def frame_scores
       totals = []
-      @frames.length.times do |turn|
-        score = @frames[turn].reduce(&:+)
-        if turn > 1 && @frames[turn - 1].reduce(&:+) == 10
+      frames.length.times do |turn|
+        score = frames[turn].reduce(&:+)
+        if turn > 0 && frames[turn - 1].reduce(&:+) == 10
           totals[turn - 1] += score
+        end
+        if turn > 1 && frames[(turn - 2)..(turn - 1)] == [[10], [10]]
+          totals[turn - 2] += frames[turn].first.to_i
         end
         totals << score
       end
@@ -62,26 +72,7 @@ module Bowlr
     end
 
     def print_current_score
-      scorecard = []
-      @frames.length.times do |frame_index|
-        frame_score = @frames[frame_index].map(&:to_i).reduce(&:+)
-        if frame_index == 0
-          scorecard.push(frame_score)
-        else
-          if frame_index > 1
-            if @frames[(frame_index - 2)..(frame_index - 1)] == [['10'], ['10']]
-              scorecard[frame_index - 2] += @frames[frame_index].first.to_i
-            end
-          end
-          previous_frame = @frames[frame_index - 1].map(&:to_i)
-          if previous_frame == [10]
-            scorecard[frame_index - 1] += frame_score
-          elsif previous_frame.reduce(&:+) == 10
-            scorecard[frame_index - 1] += @frames[frame_index].first.to_i
-          end
-          scorecard.push(scorecard.last + frame_score)
-        end
-      end
+      scorecard = summing_scores
       print "\n #{scorecard.join(' | ')}"
     end
 
