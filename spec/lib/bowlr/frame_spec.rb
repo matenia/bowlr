@@ -82,10 +82,70 @@ describe Bowlr::Frame do
 
         it 'is a complete frame if both turns taken' do
           frame.ball_2 = 4
-          puts frame.inspect
           expect(frame.frame_complete?).to be(true)
         end
       end
     end
   end
+
+  describe 'attempting to cheat on a normal frame' do
+    let(:frame) { Frame.new(frame_number: 5) }
+
+    context 'trying to add 11' do
+      before do
+        frame.add_ball('11')
+      end
+
+      it 'does not apply the score' do
+        expect(frame.ball_1).to eq(nil)
+      end
+    end
+
+    context 'with a frame score of 11' do
+      before do
+        frame.add_ball('5')
+        frame.add_ball('6')
+      end
+
+      it 'does not apply the second ball' do
+        expect(frame.ball_1).to eq(5)
+        expect(frame.ball_2).to eq(nil)
+      end
+    end
+  end
+
+  describe 'attempting to cheat on the tenth frame' do
+    let(:frame) { Frame.new(frame_number: 10) }
+
+    context 'with a strike and bonus ball 1 being 11' do
+      before do
+        frame.add_ball('10')
+        frame.add_ball('11')
+      end
+
+      it 'does not assign bonus_ball_1' do
+        expect(frame.bonus_ball_1).to eq(nil)
+      end
+
+      it 'does not assign bonus_ball_2' do
+        frame.add_ball('5')
+        frame.add_ball('6')
+        expect(frame.bonus_ball_1).to eq(5)
+        expect(frame.bonus_ball_2).to eq(nil)
+      end
+    end
+
+    context 'with a spare bonus ball 1 being 11' do
+      before do
+        frame.add_ball('5')
+        frame.add_ball('5')
+        frame.add_ball('11')
+      end
+
+      it 'does not assign bonus_ball_1' do
+        expect(frame.bonus_ball_1).to eq(nil)
+      end
+    end
+  end
+
 end

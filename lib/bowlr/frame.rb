@@ -61,8 +61,14 @@ module Bowlr
           self.bonus_ball_1 = pins
         elsif bonus_ball_2.nil? && strike?
           self.bonus_ball_2 = pins
+          self.bonus_ball_2 = nil unless both_bonus_balls_valid?
         end
       end
+    end
+
+    def both_bonus_balls_valid?
+      (bonus_ball_1 + bonus_ball_2) <= 10 ||
+        (bonus_ball_1 == 10 && bonus_ball_2 <= 10)
     end
 
     def turns_taken?
@@ -78,32 +84,3 @@ module Bowlr
     end
   end
 end
-
-=begin
-
-    def add_to_current_ball(pins)
-      if ball_1.nil?
-        self.ball_1 = pins
-        return
-      end
-
-      if frame_number <= 10 && !strike?
-        if ball_2.nil?
-          self.ball_2 = pins
-          return
-        end
-      else # we're in bonus mode
-        if strike?
-          if bonus_ball_1.nil?
-            self.bonus_ball_1 = pins
-            return
-          else # second bonus ball
-            self.bonus_ball_2 = pins
-            return
-          end
-        elsif spare?
-          self.bonus_ball_1 = pins
-        end
-      end
-    end
-=end
