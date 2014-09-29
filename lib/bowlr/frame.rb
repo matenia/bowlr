@@ -56,6 +56,7 @@ module Bowlr
       elsif frame_number == 10
         if ball_2.nil? && !strike?
           self.ball_2 = pins
+          self.ball_2 = nil if pin_score > 10
         elsif bonus_ball_1.nil? && (strike? || spare?)
           self.bonus_ball_1 = pins
         elsif bonus_ball_2.nil? && strike?

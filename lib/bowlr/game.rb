@@ -1,4 +1,3 @@
-require 'bowlr/turn_validator'
 require 'bowlr/score_printer'
 require 'bowlr/score_card'
 require 'bowlr/frame'
