@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Bowlr::VERSION
   spec.authors       = ['Matenia Rossides']
   spec.email         = ['matenia@gmail.com']
-  spec.summary       = %q{Lets go bowling}
-  spec.description   = %q{Calculate a bowling game on a ball by ball basis}
+  spec.summary       = 'Lets go bowling'
+  spec.description   = 'Calculate a bowling game on a ball by ball basis'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0")

@@ -26,6 +26,5 @@ module Bowlr
         frames[1].add_bonus(frames[2].ball_1)
       end
     end
-
   end
 end

@@ -13,7 +13,7 @@ module Bowlr
     private
 
     def cumulative
-      scores.inject([]) do |score_sum, score|
+      scores.reduce([]) do |score_sum, score|
         score_sum + [(score_sum.last || 0) + score]
       end
     end

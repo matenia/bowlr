@@ -11,7 +11,8 @@ module Bowlr
 
     def add_ball(pins)
       number = pins.to_s[/\d+/]
-      return if number.nil? || number.to_i > 10 || number.to_i < 0 # invalid turn
+      # invalid turn
+      return if number.nil? || number.to_i > 10 || number.to_i < 0
       add_to_current_ball(number.to_i)
       self.frame_score = pin_score
     end
@@ -47,6 +48,7 @@ module Bowlr
 
     private
 
+    # FIXME: Method too long - needs refactoring, perhape another method?
     def add_to_current_ball(pins)
       if ball_1.nil?
         self.ball_1 = pins

@@ -46,7 +46,5 @@ module Bowlr
     def new_frame
       self.current_frame = Frame.new(frame_number: frames.length + 1)
     end
-
   end
-
 end

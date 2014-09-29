@@ -15,7 +15,9 @@ describe Bowlr::Frame do
   end
 
   describe '#pin_score' do
-    let(:frame_turns) { { frame_number: 10, ball_1: 10, bonus_ball_1: 5, bonus_ball_2: 4 } }
+    let(:frame_turns) do
+      { frame_number: 10, ball_1: 10, bonus_ball_1: 5, bonus_ball_2: 4 }
+    end
     let(:tenth_frame) { described_class.new(frame_turns) }
 
     it 'returns the sum of all balls played' do
