@@ -35,7 +35,6 @@ module Bowlr
           else
             yield line
           end
-          @application.print_current_frames
           print prompt
         end
       end

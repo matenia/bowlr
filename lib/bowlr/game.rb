@@ -1,84 +1,53 @@
 require 'bowlr/turn_validator'
+require 'bowlr/score_printer'
+require 'bowlr/score_card'
+require 'bowlr/frame'
+require 'bowlr/score_calculator'
 
 module Bowlr
   class Game
-    attr_accessor :frames, :turn
+    attr_accessor :frames, :turn, :max_frames, :current_frame
 
     def initialize
       @turn = []
       @frames = []
+      @max_frames = 10
+      @current_frame = new_frame
     end
 
-    def hit(num)
-      if can_take_turn?
-        turn.push(num.strip)
-        if turn_valid?
-          turn.map!(&:to_i)
-          group_frames
-        else
-          turn.pop
-          nil
-        end
-      else
-        print "\nGame Over, Type Exit and run again\n"
+    def hit(pins)
+      current_frame.add_ball(pins)
+
+      if current_frame.frame_complete?
+        self.frames.push(current_frame)
+        self.current_frame = new_frame
+        ScoreCalculator.new(frames).update_frame_scores
+        print ScorePrinter.new(frames).output
+        print ScoreCard.new(frames).output
+      end
+
+      if game_complete?
+        print "\n Game Total:\n"
+        print ScorePrinter.new(frames).output
+        print ScoreCard.new(frames).output
+        print "\nGame Over, Type Exit and run again"
       end
     end
 
-    def can_take_turn?
-      true if frames.length <= 10
-    end
-
-    def turn_valid?
-      TurnValidator.validate(turn)
-    end
-
-    def group_frames
-      if turn == [10] || turn.length == 2
-        frames << turn
-        @turn = []
-      end
-    end
-
-    def print_current_frames
-      if turn == []
-        frames.each do |frame|
-          print "#{frame.join(' ')} | "
-        end
-        print_current_score
-      end
-    end
-
-    # generate array of frame scores
-    def frame_scores
-      totals = []
-      frames.length.times do |turn|
-        score = frames[turn].reduce(&:+)
-        if turn > 0 && frames[turn - 1].reduce(&:+) == 10
-          totals[turn - 1] += score
-        end
-        if turn > 1 && frames[(turn - 2)..(turn - 1)] == [[10], [10]]
-          totals[turn - 2] += frames[turn].first.to_i
-        end
-        totals << score
-      end
-      totals
-    end
-
-    def summing_scores
-      # given an array of frame_scores, return an array of cumulative results
-      frame_scores.inject([]) do |score_sum, score|
-        score_sum + [(score_sum.last || 0) + score]
-      end
-    end
-
-    def print_current_score
-      scorecard = summing_scores
-      print "\n #{scorecard.join(' | ')}"
+    def game_complete?
+      frames.length == 10
     end
 
     def usage
       'Enter number of pins knocked down, turn by turn'
     end
+
+    private
+
+    def new_frame
+      self.current_frame = Frame.new(frame_number: frames.length + 1)
+    end
+
   end
 
 end

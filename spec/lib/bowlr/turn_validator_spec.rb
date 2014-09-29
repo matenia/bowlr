@@ -12,7 +12,6 @@ describe Bowlr::TurnValidator do
       it 'returns true for [4,3]' do
         expect(described_class.validate(['4','3'])).to eq(true)
       end
-
     end
 
     context 'with an invalid turn' do
