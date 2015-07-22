@@ -1,5 +1,4 @@
 require 'thor'
-
 require 'bowlr/game'
 
 module Bowlr
@@ -18,7 +17,6 @@ module Bowlr
     default_task :execute
 
     no_tasks do
-
       def instructions(&instruction)
         print "#{@application.usage}"
         print prompt

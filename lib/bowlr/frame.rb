@@ -53,18 +53,26 @@ module Bowlr
       if ball_1.nil?
         self.ball_1 = pins
       elsif frame_number < 10
+        add_normal_frame(pins)
+      elsif frame_number == 10
+        add_tenth_frame(pins)
+      end
+    end
+
+    def add_normal_frame(pins)
+      self.ball_2 = pins
+      self.ball_2 = nil if pin_score > 10
+    end
+
+    def add_tenth_frame(pins)
+      if ball_2.nil? && !strike?
         self.ball_2 = pins
         self.ball_2 = nil if pin_score > 10
-      elsif frame_number == 10
-        if ball_2.nil? && !strike?
-          self.ball_2 = pins
-          self.ball_2 = nil if pin_score > 10
-        elsif bonus_ball_1.nil? && (strike? || spare?)
-          self.bonus_ball_1 = pins
-        elsif bonus_ball_2.nil? && strike?
-          self.bonus_ball_2 = pins
-          self.bonus_ball_2 = nil unless both_bonus_balls_valid?
-        end
+      elsif bonus_ball_1.nil? && (strike? || spare?)
+        self.bonus_ball_1 = pins
+      elsif bonus_ball_2.nil? && strike?
+        self.bonus_ball_2 = pins
+        self.bonus_ball_2 = nil unless both_bonus_balls_valid?
       end
     end
 
