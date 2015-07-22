@@ -1,4 +1,5 @@
 # Bowlr
+[![Build Status](https://travis-ci.org/matenia/bowlr.svg?branch=master)](https://travis-ci.org/matenia/bowlr)
 
 Calculate your bowling game on a turn by turn basis!
 
